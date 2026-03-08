@@ -29,28 +29,14 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-const allowedOrigins = [
-  'http://localhost:5173', // local frontend (vite)
-  'http://localhost:3000', // local frontend (react/next)
-  'http://localhost:5500',
-  'https://roboxplore2026.vercel.app/', // production frontend
-]
+// Middleware - Allow all origins for now (update with specific domains in production)
+app.use(cors({
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false
+}));
 
-
-// Middleware
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true) // allow Postman / server requests
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    },
-  })
-)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
